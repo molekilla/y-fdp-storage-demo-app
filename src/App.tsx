@@ -37,8 +37,8 @@ ydoc.on("update", async (update) => {
   await persistence.storeUpdate(update);
 });
 const close = persistence.subscribe(ydoc);
-
 const text = ydoc.getText("quill");
+
 function App() {
   const quillRef = useRef(null);
   const [value, setValue] = useState("");
@@ -49,9 +49,8 @@ function App() {
     binding = new QuillBinding(text, quillRef.current.getEditor());
   }
 
-  // long polling
-
   return (
+
     <ReactQuill theme="snow" value={value} onChange={setValue} ref={quillRef} />
   );
 }
