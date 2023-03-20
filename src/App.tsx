@@ -28,7 +28,6 @@ function App() {
   );
   const [documentName, setDocumentName] = useState("/crdt/document/test1");
 
-
   async function connect() {
     const wallet = makePrivateKeySigner(Utils.hexToBytes(secretKey));
     const topic = documentName;
@@ -40,16 +39,11 @@ function App() {
       topic,
       postageBatchId
     );
-    ydoc.on("update", async (update) => {
-      await persistence.storeUpdate(update);
-    });
+    persistence.autoUpdate(ydoc);
     const close = persistence.subscribe(ydoc);
-
-
-    ydoc = await persistence.getYDoc();
     const text = ydoc.getText("quill");
     // @ts-ignore - quillRef.current is not null
-      binding = new QuillBinding(text, quillRef.current.getEditor());
+    binding = new QuillBinding(text, quillRef.current.getEditor());
   }
   return (
     <>
@@ -76,11 +70,7 @@ function App() {
             variant="standard"
           />
         </div>
-        <Button
-          startIcon={<WifiIcon />}
-          variant="contained"
-          onClick={connect}
-        >
+        <Button startIcon={<WifiIcon />} variant="contained" onClick={connect}>
           Connect
         </Button>
       </div>
