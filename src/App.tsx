@@ -1,4 +1,6 @@
 import * as Y from "yjs";
+import WifiIcon from "@mui/icons-material/Wifi";
+import Button from "@mui/material/Button";
 import { useState, useRef } from "react";
 import "./App.css";
 import ReactQuill from "react-quill";
@@ -16,26 +18,20 @@ const bee = new Bee(process.env.REACT_APP_BEE_URL || "http://localhost:1633");
 
 let binding: any;
 
-const ydoc = new Y.Doc();
-const text = ydoc.getText("quill");
+let ydoc = new Y.Doc();
 
 function App() {
   const quillRef = useRef(null);
   const [value, setValue] = useState("");
+  const [secretKey, setPrivateKey] = useState(
+    "634fb5a872396d9693e5c9f9d7233cfa93f395c093371017ff44aa9ae6564cdd"
+  );
+  const [documentName, setDocumentName] = useState("/crdt/document/test1");
 
-  if (quillRef.current && binding === undefined) {
-    console.log("binding", quillRef.current);
-    // @ts-ignore - quillRef.current is not null
-    binding = new QuillBinding(text, quillRef.current.getEditor());
-  }
 
-  function connect() {
-    const wallet = makePrivateKeySigner(
-      Utils.hexToBytes(
-        "634fb5a872396d9693e5c9f9d7233cfa93f395c093371017ff44aa9ae6564cdd"
-      )
-    );
-    const topic = "/crdt/document/test1";
+  async function connect() {
+    const wallet = makePrivateKeySigner(Utils.hexToBytes(secretKey));
+    const topic = documentName;
 
     // Create FdpStoragePersistence object
     const persistence = new FdpStoragePersistence(
@@ -48,34 +44,46 @@ function App() {
       await persistence.storeUpdate(update);
     });
     const close = persistence.subscribe(ydoc);
+
+
+    ydoc = await persistence.getYDoc();
+    const text = ydoc.getText("quill");
+    // @ts-ignore - quillRef.current is not null
+      binding = new QuillBinding(text, quillRef.current.getEditor());
   }
   return (
     <>
       <div>
-        <TextField
-          required
-          onChange={(e) => {
-            // setPrivateKey e.target.value;
-          }}
-          id="standard-required"
-          label="Private Key"
-          defaultValue={privateKey}
-          variant="standard"
-        />
+        <div>
+          <TextField
+            required
+            onChange={(e) => {
+              setPrivateKey(e.target.value);
+            }}
+            id="standard-required"
+            label="Private Key"
+            variant="standard"
+          />
+        </div>
+        <div>
+          <TextField
+            required
+            onChange={(e) => {
+              setDocumentName(e.target.value);
+            }}
+            id="standard-required"
+            label="Document Name"
+            variant="standard"
+          />
+        </div>
+        <Button
+          startIcon={<WifiIcon />}
+          variant="contained"
+          onClick={connect}
+        >
+          Connect
+        </Button>
       </div>
-      <div>
-        <TextField
-          required
-          onChange={(e) => {
-            // setDocumentName e.target.value;
-          }}
-          id="standard-required"
-          label="Document Name"
-          defaultValue={documentName}
-          variant="standard"
-        />
-      </div>
-      <!-- TODO: Connect button --> 
       <ReactQuill
         theme="snow"
         value={value}
