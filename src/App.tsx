@@ -11,7 +11,7 @@ import { Bee, Utils } from "@ethersphere/bee-js";
 import TextField from "@mui/material/TextField";
 
 const postageBatchId =
-  process.env.BEE_POSTAGE ||
+  process.env.REACT_APP_BEE_POSTAGE ||
   "1c082c5e642e15d49b6689f5437c2eb9e6aa9c546a8ed1d11d0024b043bca371";
 
 const bee = new Bee(process.env.REACT_APP_BEE_URL || "http://localhost:1633");
@@ -19,7 +19,8 @@ const bee = new Bee(process.env.REACT_APP_BEE_URL || "http://localhost:1633");
 let binding: any;
 
 let ydoc = new Y.Doc();
-
+let close1: any;
+let close2: any;
 function App() {
   const quillRef = useRef(null);
   const [value, setValue] = useState("");
@@ -39,8 +40,12 @@ function App() {
       topic,
       postageBatchId
     );
-    persistence.autoUpdate(ydoc);
-    const close = persistence.subscribe(ydoc);
+    if (close1) {
+      close1();
+      close2();
+    }
+    close1 = persistence.autoUpdate(ydoc, 2000);
+    close2 = persistence.subscribe(ydoc, 3000);
     const text = ydoc.getText("quill");
     // @ts-ignore - quillRef.current is not null
     binding = new QuillBinding(text, quillRef.current.getEditor());

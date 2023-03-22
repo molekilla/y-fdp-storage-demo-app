@@ -1,12 +1,21 @@
 ## y-fdp-storage demo app
 
+## How to execute demo app
 
-1. `npm i`
-2. `npm run start`
-3. Open `http://localhost:3000` in two tabs
-4. Fill in `Private Key` and `Document Name` value and click connect
-5. Write anything in text editor
-6. Wait a few seconds and watch editors being synchronized
+1. Configure environment variables in a .env file and then run fdp-play. If you need a postage stamp, run unit tests found in `y-fdp-storage` and enable postage stamps seed in jest setup.
+
+```yaml
+# example
+REACT_APP_BEE_URL=http://localhost:1633
+REACT_APP_BEE_POSTAGE=1c082c5e642e15d49b6689f5437c2eb9e6aa9c546a8ed1d11d0024b043bca371
+```
+
+2. Install demo with `npm i`
+3. Run react app with `npm run start`
+4. Open `http://localhost:3000` in two different tabs
+5. Fill in `Private Key` and `Document Name` value and click Connect
+6. Write anything in text editor
+7. Wait a few seconds and watch editors being synchronized
 
 
 ## How it works
