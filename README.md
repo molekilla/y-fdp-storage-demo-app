@@ -1,6 +1,7 @@
 ## y-fdp-storage demo app
 
 ## How to execute demo app
+[Untitled_ Mar 24, 2023 10_32 AM.webm](https://user-images.githubusercontent.com/1248071/227571255-0f4e6c54-a2cf-49ff-b837-c62617250be5.webm)
 
 1. Configure environment variables in a .env file and then run fdp-play. If you need a postage stamp, run unit tests found in `y-fdp-storage` and enable postage stamps seed in jest setup.
 
